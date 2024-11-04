@@ -7,6 +7,15 @@ async function uploadFile() {
         return;
     }
 
+    // ファイルサイズの制限を100KBに設定
+    const maxSize = 1 * 1024 / 10; // 100KB = 102,400 bytes
+    //const maxSize = 1 * 1024 * 1024; // 1MB = 1,048,576 bytes
+    console.log(file.size);
+    if (file.size > maxSize) {
+        alert('ファイルサイズが100KBを超えています。別のファイルを選択してください。');
+        return;
+    }
+
     // API GatewayのエンドポイントURL（実際のURLに置き換えてください）
     //const apiUrl = 'https://kpi3wmteek.execute-api.ap-northeast-1.amazonaws.com';
     const apiUrl = 'https://kpi3wmteek.execute-api.ap-northeast-1.amazonaws.com/test/generate-url';
@@ -24,7 +33,6 @@ async function uploadFile() {
             }),
             // CORS対応のための設定
             mode: 'cors',
-            credentials: 'same-origin'
         });
         const data = await response.json();
         console.log('URL取得に成功:', data);
@@ -38,6 +46,7 @@ async function uploadFile() {
             headers: {
                 'Content-Type': file.type || 'application/octet-stream'
             },
+            mode: 'cors',
             body: file
         });
 
